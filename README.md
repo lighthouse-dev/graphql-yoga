@@ -19,7 +19,7 @@ query {
     id, title, rating
   }
   movie(id: 18115) {
-    id, title
+    id, description_full
   }
   suggestions(id: 18115) {
     id, title
