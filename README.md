@@ -1,5 +1,7 @@
 # graphql-yoga
 
+http://localhost:4000/
+
 ## Install
 
     yarn insatll
@@ -9,4 +11,18 @@
     yarn start
 
 
-http://localhost:4000/
+## Query example
+
+```
+query {
+	movies(rating: 8.5, limit: 3) {
+    id, title, rating
+  }
+  movie(id: 18115) {
+    id, title
+  }
+  suggestions(id: 18115) {
+    id, title
+  }
+}
+```
