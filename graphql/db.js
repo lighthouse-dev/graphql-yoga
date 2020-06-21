@@ -1,71 +1,66 @@
-export const people = [
-  {
-    id: 1,
-    name: 'julee',
-    age: '18',
-    gender: 'male'
-  },
-  {
-    id: 2,
-    name: 'hoge',
-    age: '28',
-    gender: 'male'
-  },
-  {
-    id: 3,
-    name: 'hoge',
-    name: 'fuga',
-    age: '38',
-    gender: 'male'
-  }
-];
+import axios from 'axios';
 
-let movies = [
-  {
-    id: 1,
-    name: 'Avengers - The new one',
-    score: 8
-  },
-  {
-    id: 2,
-    name: 'The Godfather I',
-    score: 9
-  },
-  {
-    id: 3,
-    name: 'Logan',
-    score: 7
-  }
-];
+const BASE_URL = 'https://yts.mx/api/v2/';
+const LIST_MOVIES_URL = `${BASE_URL}list_movies.json`;
+const MOVIE_SUGGESTIINS_URL = `${BASE_URL}movie_suggestions.json`;
 
-export const getById = id => {
-  const filteredPeople = people.filter(person => person.id === id);
-  return filteredPeople[0];
+let allMovieList = [];
+
+export const getMovies = async (limit, rating) => {
+  // 初回のみリクエスト
+  if (allMovieList.length === 0) {
+    const {
+      data: {
+        data: { movies }
+      }
+    } = await axios(LIST_MOVIES_URL, {
+      params: {
+        limit,
+        minimum_rating: rating
+      }
+    });
+
+    allMovieList = movies;
+  }
+
+  return allMovieList;
 };
 
-export const getMovies = () => movies;
-
-export const getMoviesById = id => {
-  const filteredMovie = movies.filter(movie => movie.id === id);
+export const getMovieById = async id => {
+  const filteredMovie = allMovieList.filter(movie => movie.id === id);
   return filteredMovie[0];
 };
 
-export const deleteMovie = id => {
-  const cleanedMovies = movies.filter(movie => movie.id !== id);
+export const getSuggestions = async id => {
+  const {
+    data: {
+      data: { movies }
+    }
+  } = await axios(MOVIE_SUGGESTIINS_URL, {
+    params: {
+      movie_id: id
+    }
+  });
 
-  if (movies.length > cleanedMovies.length) {
-    movies = cleanedMovies;
+  return movies;
+};
+
+export const deleteMovie = id => {
+  const cleanedMovies = allMovieList.filter(movie => movie.id !== id);
+
+  if (allMovieList.length > cleanedMovies.length) {
+    allMovieList = cleanedMovies;
     return true;
   }
   return false;
 };
 
-export const addMovie = (name, score) => {
+export const addMovie = (title, rating) => {
   const newMovie = {
-    id: Number(`${movies.length + 1}`),
-    name,
-    score
+    id: Number(`${allMovieList.length + 1}`),
+    title,
+    rating
   };
-  movies.push(newMovie);
+  allMovieList.push(newMovie);
   return newMovie;
 };

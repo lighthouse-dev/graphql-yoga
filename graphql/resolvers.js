@@ -1,21 +1,19 @@
 import {
-  people,
-  getById,
   getMovies,
-  getMoviesById,
+  getMovieById,
+  getSuggestions,
   addMovie,
   deleteMovie
 } from './db';
 
 const resolvers = {
   Query: {
-    people: () => people,
-    person: (_, { id }) => getById(id),
-    movies: () => getMovies(),
-    movie: (_, { id }) => getMoviesById(id)
+    movies: (_, { limit, rating }) => getMovies(limit, rating),
+    movie: (_, { id }) => getMovieById(id),
+    suggestions: (_, { id }) => getSuggestions(id)
   },
   Mutation: {
-    addMovie: (_, { name, score }) => addMovie(name, score),
+    addMovie: (_, { title, rating }) => addMovie(title, rating),
     deleteMovie: (_, { id }) => deleteMovie(id)
   }
 };
